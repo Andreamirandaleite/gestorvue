@@ -1,35 +1,40 @@
 <template>
   <div id="app">
-    <!-- Barra de navegación con enlaces a diferentes rutas -->
+    <!-- Barra de navegación con enlaces a las diferentes vistas -->
     <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/addtask">Agregar Tarea</router-link> 
+      <router-link to="/">Inicio</router-link>
+      <router-link to="/addtask">Añadir Tarea</router-link>
+      <router-link to="/tasklist">Lista de Tareas</router-link>
     </nav>
-    <!-- Aquí se cargará el componente correspondiente a la ruta seleccionada -->
-    <router-view/>
+
+    <!-- Aquí se renderizarán las vistas de acuerdo a la ruta seleccionada -->
+    <router-view></router-view>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+export default {
+  name: 'App',
+};
+</script>
 
+<style scoped>
+/* Estilos para la barra de navegación */
 nav {
-  padding: 30px;
+  padding: 10px;
+  font-size: 18px;
+  background-color: #f0f0f0;
+  border-bottom: 2px solid #ddd;
 }
 
 nav a {
-  font-weight: bold;
-  color: #2c3e50;
+  margin-right: 15px;
+  text-decoration: none;
+  color: #42b983;
 }
 
 nav a.router-link-exact-active {
-  color: #42b983;
+  color: #35495e;
+  font-weight: bold;
 }
 </style>

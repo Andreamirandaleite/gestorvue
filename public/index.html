@@ -1,204 +1,205 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Lista de Tareas - Andrea</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- FontAwesome para iconos -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    
-    <!-- Estilos personalizados -->
-    <style>
-      body {
-        background: #fef6f9;
-        font-family: 'Arial', sans-serif;
-      }
-      h1 {
-        color: #ff69b4;
-        font-weight: bold;
-        margin-bottom: 30px;
-      }
-      .todo-item {
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        padding: 15px;
-        margin-bottom: 15px;
-        transition: transform 0.3s ease;
-      }
-      .todo-item:hover {
-        transform: translateY(-5px);
-      }
-      .todo-item.completed {
-        text-decoration: line-through;
-        opacity: 0.6;
-      }
-      .btn-custom {
-        background-color: #ff69b4;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        transition: 0.3s;
-        padding: 5px 12px; /* Botón más pequeño */
-        font-size: 12px; /* Texto más pequeño */
-      }
-      .btn-custom:hover {
-        background-color: #e05695;
-      }
-      .input-task {
-        border-radius: 30px;
-        padding-left: 20px;
-        height: 45px;
-        border: 2px solid #ff69b4;
-        margin-bottom: 20px;
-      }
-      .input-task:focus {
-        outline: none;
-        border-color: #e05695;
-      }
-      .nav-tabs .nav-link.active {
-        background-color: #ff69b4;
-        color: white;
-      }
-      .add-task-container {
-        display: flex;
-        gap: 10px; /* Espacio entre el input y el botón */
-        align-items: center;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container mt-5">
-      <!-- Título principal -->
-      <h1 class="text-center">Lista de Tareas</h1>
-      
-      <!-- Barra para añadir tarea arriba con más espacio -->
-      <div class="add-task-container mb-4">
-        <input type="text" id="new-task" class="form-control input-task" placeholder="Escribe una nueva tarea..." />
-        <button id="add-task-btn" class="btn btn-custom d-flex align-items-center">
-          <i class="fas fa-plus me-2"></i> Añadir
-        </button>
-      </div>
-      
-      <!-- Navegación para alternar vistas -->
-      <ul class="nav nav-tabs mb-4" id="task-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" href="#" data-filter="all">Todas</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" data-filter="pending">Pendientes</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" data-filter="completed">Completadas</a>
-        </li>
-      </ul>
-      
-      <!-- Contenedor de la lista -->
-      <div id="todo-list">
-        <!-- Las tareas se inyectarán aquí desde el script -->
-      </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestor de Tareas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #fef6f9;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Menú de navegación */
+    .menu {
+      background-color: #ff69b4;
+      padding: 10px 0;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .menu button {
+      background-color: white;
+      border: none;
+      color: #ff69b4;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .menu button:hover {
+      background-color: #ff69b4;
+      color: white;
+    }
+
+    .section {
+      display: none;
+      padding: 20px;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .task-item {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .task-item.completed {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
+    .add-task-form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .add-task-form input {
+      flex-grow: 1;
+      border: 2px solid #ff69b4;
+      border-radius: 5px;
+      padding: 10px;
+    }
+
+    .add-task-form button {
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    /* Botones con colores pastel */
+    .btn-pending {
+      background-color: #ffb3b3; /* Rojo pastel */
+      color: white;
+    }
+
+    .btn-completed {
+      background-color: #ffeb99; /* Amarillo pastel */
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <!-- Menú de navegación -->
+  <div class="menu">
+    <button onclick="navigateTo('add-task')">Añadir Tarea</button>
+    <button onclick="navigateTo('combined')">Combinadas</button>
+    <button onclick="navigateTo('completed')">Completadas</button>
+  </div>
+
+  <!-- Sección Añadir Tarea -->
+  <div id="add-task" class="section active">
+    <h2 class="text-center">Añadir Tarea</h2>
+    <div class="add-task-form">
+      <input type="text" id="task-input" placeholder="Escribe una nueva tarea...">
+      <button id="add-task-btn">Añadir</button>
     </div>
-    
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Script de funcionalidad -->
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const todoList = document.getElementById('todo-list');
-        const addTaskBtn = document.getElementById('add-task-btn');
-        const newTaskInput = document.getElementById('new-task');
-        const taskTabs = document.getElementById('task-tabs');
-        let filter = 'all';
-        
-        // Tareas predeterminadas
-        let todos = [
-          { todo: "Comprar leche", completed: false },
-          { todo: "Llamar a mamá", completed: true },
-          { todo: "Terminar proyecto de programación", completed: false }
-        ];
+  </div>
 
-        // Función para renderizar las tareas
-        const renderTodos = () => {
-          todoList.innerHTML = '';
-          const filteredTodos = todos.filter((todo) => {
-            if (filter === 'pending') return !todo.completed;
-            if (filter === 'completed') return todo.completed;
-            return true; // Mostrar todas
-          });
+  <!-- Sección Tareas Combinadas -->
+  <div id="combined" class="section">
+    <h2 class="text-center">Tareas Combinadas</h2>
+    <div id="combined-list"></div>
+  </div>
 
-          filteredTodos.forEach((todo, index) => {
-            const todoItem = document.createElement('div');
-            todoItem.className = `todo-item d-flex justify-content-between align-items-center ${
-              todo.completed ? 'completed' : ''
-            }`;
-            todoItem.innerHTML = `
-              <span>${todo.todo}</span>
-              <div>
-                <button class="btn btn-custom btn-sm me-2 complete-btn" data-index="${index}">
-                  <i class="fas fa-check"></i>
-                </button>
-                <button class="btn btn-danger btn-sm delete-btn" data-index="${index}">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
-            `;
-            todoList.appendChild(todoItem);
-          });
-        };
+  <!-- Sección Tareas Completadas -->
+  <div id="completed" class="section">
+    <h2 class="text-center">Tareas Completadas</h2>
+    <div id="completed-list"></div>
+  </div>
 
-        // Cambiar filtro de tareas
-        taskTabs.addEventListener('click', (e) => {
-          if (e.target.tagName === 'A') {
-            e.preventDefault();
-            filter = e.target.dataset.filter;
-            document.querySelectorAll('#task-tabs .nav-link').forEach((tab) => {
-              tab.classList.remove('active');
-            });
-            e.target.classList.add('active');
-            renderTodos();
-          }
-        });
+  <script>
+    let tasks = [];
 
-        // Marcar tarea como completada
-        todoList.addEventListener('click', (e) => {
-          if (e.target.closest('.complete-btn')) {
-            const index = e.target.closest('.complete-btn').dataset.index;
-            todos[index].completed = !todos[index].completed;
-            renderTodos();
-          }
-        });
+    // Cargar las tareas desde la API
+    async function fetchTasks() {
+      try {
+        const response = await fetch("https://dummyjson.com/todos");
+        const data = await response.json();
+        tasks = data.todos;
+        renderTasks();
+      } catch (error) {
+        console.error('Error al cargar las tareas:', error);
+      }
+    }
 
-        // Eliminar tarea
-        todoList.addEventListener('click', (e) => {
-          if (e.target.closest('.delete-btn')) {
-            const index = e.target.closest('.delete-btn').dataset.index;
-            todos.splice(index, 1);
-            renderTodos();
-          }
-        });
+    function navigateTo(section) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(section).classList.add('active');
+      renderTasks();
+    }
 
-        // Añadir nueva tarea
-        addTaskBtn.addEventListener('click', () => {
-          const taskText = newTaskInput.value.trim();
-          if (taskText) {
-            todos.unshift({
-              todo: taskText,
-              completed: false,
-            });
-            newTaskInput.value = '';
-            renderTodos();
-          }
-        });
+    function renderTasks() {
+      const combinedList = document.getElementById('combined-list');
+      const completedList = document.getElementById('completed-list');
+      combinedList.innerHTML = '';
+      completedList.innerHTML = '';
 
-        // Inicializar la aplicación con las tareas predeterminadas
-        renderTodos();
+      tasks.forEach((task, index) => {
+        const taskItem = document.createElement('div');
+        taskItem.className = `task-item ${task.completed ? 'completed' : ''}`;
+        taskItem.innerHTML = `
+          <span>${task.todo}</span>
+          <div>
+            <button class="btn btn-sm ${task.completed ? 'btn-completed' : 'btn-pending'} toggle-btn" data-index="${index}">
+              ${task.completed ? 'Desmarcar' : 'Marcar como Hecho'}
+            </button>
+            <button class="btn btn-sm btn-danger delete-btn" data-index="${index}">
+              <i class="fas fa-trash"></i> Eliminar
+            </button>
+          </div>
+        `;
+
+        combinedList.appendChild(taskItem.cloneNode(true));
+        if (task.completed) {
+          completedList.appendChild(taskItem);
+        }
       });
-    </script>
-  </body>
+    }
+
+    document.getElementById('add-task-btn').addEventListener('click', () => {
+      const taskInput = document.getElementById('task-input');
+      const taskName = taskInput.value.trim();
+      if (taskName) {
+        tasks.push({ todo: taskName, completed: false });
+        taskInput.value = '';
+        renderTasks();
+        navigateTo('combined');
+      }
+    });
+
+    document.body.addEventListener('click', (e) => {
+      if (e.target.closest('.toggle-btn')) {
+        const index = e.target.closest('.toggle-btn').dataset.index;
+        tasks[index].completed = !tasks[index].completed;
+        renderTasks();
+      } else if (e.target.closest('.delete-btn')) {
+        const index = e.target.closest('.delete-btn').dataset.index;
+        tasks.splice(index, 1);
+        renderTasks();
+      }
+    });
+
+    // Cargar tareas al iniciar la página
+    fetchTasks();
+  </script>
+</body>
 </html>
