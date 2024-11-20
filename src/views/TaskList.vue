@@ -1,49 +1,44 @@
 <template>
-  <div>
-    <h1>Lista de Tareas</h1>
-    <button @click="fetchTasks">Cargar Tareas</button>
-
-    <!-- Mostrar las tareas si hay alguna -->
-    <div v-if="tasks.length">
-      <div v-for="task in tasks" :key="task.id" class="task-item">
-        <!-- Título de la tarea con estilo basado en su estado -->
-        <h5 :style="{ textDecoration: task.completed ? 'line-through' : 'none' }">
-          {{ task.todo }}
-        </h5>
-        <span>{{ task.completed ? 'Completada' : 'Pendiente' }}</span>
-
-        <!-- Marcador visual de color según estado -->
+  <div class="container mt-4">
+    <div class="card shadow p-4">
+      <!-- Sección para mostrar las tareas cargadas desde la API -->
+      <h1 class="text-center text-pink mb-4">Lista de Tareas</h1>
+      <button class="btn btn-pink mb-4" @click="fetchTasks">Cargar Tareas</button>
+      
+      <!-- Mostrar las tareas si hay alguna -->
+      <div v-if="tasks.length" class="list-group">
         <div
-          class="status-marker"
-          :style="{
-            backgroundColor: task.completed ? 'yellow' : 'red',
-            width: '15px',
-            height: '15px',
-            borderRadius: '50%',
-            display: 'inline-block',
-            marginLeft: '10px'
-          }">
+          v-for="task in tasks"
+          :key="task.id"
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <div>
+            <h5
+              :class="{ 'text-decoration-line-through': task.completed }"
+              class="mb-1"
+            >
+              {{ task.todo }}
+            </h5>
+            <span
+              :class="task.completed ? 'badge bg-success' : 'badge bg-danger'"
+            >
+              {{ task.completed ? 'Completada' : 'Pendiente' }}
+            </span>
+          </div>
+
+          <button
+            :class="task.completed ? 'btn btn-warning btn-sm' : 'btn btn-danger btn-sm'"
+            @click="toggleTaskStatus(task)"
+          >
+            {{ task.completed ? 'Marcar Pendiente' : 'Marcar Completada' }}
+          </button>
         </div>
-
-        <!-- Botón para cambiar el estado de la tarea -->
-        <button
-          :style="{
-            backgroundColor: task.completed ? 'yellow' : 'red',
-            color: 'white',
-            border: 'none',
-            padding: '5px 10px',
-            cursor: 'pointer',
-            borderRadius: '5px'
-          }"
-          @click="toggleTaskStatus(task)">
-          {{ task.completed ? 'Marcar Pendiente' : 'Marcar Completada' }}
-        </button>
       </div>
-    </div>
 
-    <!-- Mensaje cuando no hay tareas -->
-    <div v-else>
-      <p>No hay tareas para mostrar.</p>
+      <!-- Mensaje cuando no hay tareas -->
+      <div v-else class="text-center">
+        <p>No hay tareas para mostrar.</p>
+      </div>
     </div>
   </div>
 </template>
@@ -52,17 +47,17 @@
 export default {
   data() {
     return {
-      tasks: [], // Arreglo de tareas
+      tasks: [],   // Lista de tareas
     };
   },
   methods: {
-    // Función para cargar las tareas desde la API
+    // Función para cargar tareas desde una API
     async fetchTasks() {
       try {
         const response = await fetch("https://dummyjson.com/todos");
         if (response.ok) {
           const data = await response.json();
-          this.tasks = data.todos; // Asignar la lista de tareas a la variable tasks
+          this.tasks = data.todos; // Asignar las tareas obtenidas
         } else {
           console.error("Error al obtener las tareas:", response.status);
         }
@@ -80,18 +75,41 @@ export default {
 </script>
 
 <style scoped>
-.task-item {
-  margin-bottom: 20px;
+.text-pink {
+  color: #e83e8c;
 }
 
-button {
-  font-size: 14px;
-  border-radius: 5px;
-  margin-left: 10px;
+.btn-pink {
+  background-color: #e83e8c;
+  color: white;
 }
 
-.status-marker {
-  display: inline-block;
-  margin-left: 10px;
+.btn-pink:hover {
+  background-color: #c82362;
+  color: white;
+}
+
+.card {
+  border-radius: 15px;
+  border: none;
+}
+
+.text-decoration-line-through {
+  text-decoration: line-through;
+}
+
+.list-group-item {
+  border: none;
+  background-color: #f8f9fa;
+}
+
+.list-group-item:hover {
+  background-color: #f1f3f5;
+}
+
+.btn-outline-danger:hover {
+  color: white;
+  background-color: #dc3545;
+  border-color: #dc3545;
 }
 </style>

@@ -5,6 +5,9 @@
       <router-link to="/">Inicio</router-link>
       <router-link to="/addtask">Añadir Tarea</router-link>
       <router-link to="/tasklist">Lista de Tareas</router-link>
+      <router-link to="/combinedview">
+        <button class="btn btn-pink">Tareas Combinadas</button>
+      </router-link>
     </nav>
 
     <!-- Aquí se renderizarán las vistas de acuerdo a la ruta seleccionada -->
@@ -36,5 +39,19 @@ nav a {
 nav a.router-link-exact-active {
   color: #35495e;
   font-weight: bold;
+}
+
+nav button {
+  background-color: #e83e8c;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+nav button:hover {
+  background-color: #c82362;
 }
 </style>
