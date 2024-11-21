@@ -26,12 +26,21 @@
             </span>
           </div>
 
-          <button
-            :class="task.completed ? 'btn btn-warning btn-sm' : 'btn btn-danger btn-sm'"
-            @click="toggleTaskStatus(task)"
-          >
-            {{ task.completed ? 'Marcar Pendiente' : 'Marcar Completada' }}
-          </button>
+          <div>
+            <button
+              :class="task.completed ? 'btn btn-warning btn-sm' : 'btn btn-danger btn-sm'"
+              @click="toggleTaskStatus(task)"
+            >
+              {{ task.completed ? 'Marcar Pendiente' : 'Marcar Completada' }}
+            </button>
+            <!-- Botón de Eliminar -->
+            <button 
+              class="btn btn-outline-danger btn-sm mx-2" 
+              @click="removeTask(task)"
+            >
+              Eliminar
+            </button>
+          </div>
         </div>
       </div>
 
@@ -47,7 +56,7 @@
 export default {
   data() {
     return {
-      tasks: [],   // Lista de tareas
+      tasks: [], // Lista de tareas
     };
   },
   methods: {
@@ -69,6 +78,11 @@ export default {
     // Función para alternar el estado de la tarea (completada o pendiente)
     toggleTaskStatus(task) {
       task.completed = !task.completed; // Cambiar el estado de la tarea
+    },
+
+    // Función para eliminar una tarea de la vista
+    removeTask(task) {
+      this.tasks = this.tasks.filter(t => t.id !== task.id); // Filtrar y eliminar tarea
     },
   },
 };

@@ -20,10 +20,20 @@
           :key="index"
           class="list-group-item d-flex justify-content-between align-items-center"
         >
-          {{ task }}
-          <button class="btn btn-outline-danger btn-sm" @click="removeTask(index)">
-            Eliminar
-          </button>
+          <h5 :style="{ textDecoration: task.completed ? 'line-through' : 'none' }">
+            {{ task.title }}
+          </h5>
+          <span>
+            {{ task.completed ? 'Completada' : 'Pendiente' }}
+          </span>
+          <div>
+            <button @click="toggleCompletion(index)" class="btn btn-outline-success btn-sm mx-2">
+              Marcar como {{ task.completed ? 'Pendiente' : 'Completada' }}
+            </button>
+            <button @click="removeTask(index)" class="btn btn-outline-danger btn-sm">
+              Eliminar
+            </button>
+          </div>
         </li>
       </ul>
     </div>
@@ -41,8 +51,8 @@ export default {
   methods: {
     addTask() {
       const trimmedTask = this.newTask.trim();
-      if (trimmedTask && !this.tasks.includes(trimmedTask)) {
-        this.tasks.push(trimmedTask);
+      if (trimmedTask && !this.tasks.some(task => task.title === trimmedTask)) {
+        this.tasks.push({ title: trimmedTask, completed: false });
         this.newTask = '';
       } else {
         alert('La tarea ya existe o el campo está vacío.');
@@ -51,6 +61,9 @@ export default {
     removeTask(index) {
       this.tasks.splice(index, 1);
     },
+    toggleCompletion(index) {
+      this.tasks[index].completed = !this.tasks[index].completed;
+    }
   },
 };
 </script>
@@ -92,5 +105,11 @@ input:focus {
   color: white;
   background-color: #dc3545;
   border-color: #dc3545;
+}
+
+.btn-outline-success:hover {
+  color: white;
+  background-color: #28a745;
+  border-color: #28a745;
 }
 </style>
